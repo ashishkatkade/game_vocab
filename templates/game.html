@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vocabulary Game</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script>
+        function autoNext() {
+            setTimeout(() => {
+                document.getElementById('next-btn').click();
+            }, 3000); // 3-second delay
+        }
+    </script>
+</head>
+<body onload="autoNext()">
+    <h1>Guess the Meaning</h1>
+    <p>What does <strong>{{ word }}</strong> mean?</p>
+    <form action="/check" method="POST">
+        {% for option in options %}
+        <div>
+            <input type="radio" id="{{ option }}" name="answer" value="{{ option }}" required>
+            <label for="{{ option }}"
+                style="color: {% if option == correct_meaning and feedback and not feedback.is_correct %}green{% elif feedback and option == feedback.user_answer and not feedback.is_correct %}red{% else %}black{% endif %};">
+                {{ option }}
+            </label>
+        </div>
+        {% endfor %}
+        <button type="submit" {% if feedback %}disabled{% endif %}>Submit</button>
+    </form>
+
+    {% if feedback %}
+    <p>
+        {% if feedback.is_correct %}
+        🎉 Correct! Great job.
+        {% else %}
+        ❌ Incorrect. The correct answer was "{{ correct_meaning }}".
+        {% endif %}
+    </p>
+    <form action="/game" method="GET">
+        <button id="next-btn">Next Question</button>
+    </form>
+    {% endif %}
+</body>
+</html>
