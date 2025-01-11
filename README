@@ -1,0 +1,13 @@
+#use below script to upload on ec2 instance
+
+#!/bin/bash
+
+sudo yum update -y
+sudo yum install docker -y
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker `whoami`
+sudo systemctl daemon-reload
+docker pull ashishkatkade/vocab_game
+#if error try sudo docker
+docker run -d -p 5000:5000 ashishkatkade/vocab_game

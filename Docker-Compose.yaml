@@ -1,0 +1,18 @@
+version : '3.8'
+
+services:
+  flask-app:
+    build:
+      context: .
+    container_name: flask-app
+    expose:
+      - "5000"
+
+  nginx:
+    build:
+      context: ./nginx
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    depends_on:
+      - flask-app
