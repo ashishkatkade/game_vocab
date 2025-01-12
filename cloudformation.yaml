@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Resources:
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: ami-05576a079321f21f8  # Replace with a valid AMI ID for your region
+      KeyName: appkey  # Replace with your EC2 key pair name
+      SecurityGroupIds:
+        - sg-0ae3914c60a7044cc  # Replace with the Security Group ID for `launch-wizard-1`
+      UserData:
+        Fn::Base64: 
+          !Sub |
+            #!/bin/bash
+            sudo yum update -y
+            sudo yum install docker -y
+            sudo systemctl start docker
+            sudo systemctl enable docker
+            sudo usermod -aG docker ec2-user
+            sudo systemctl daemon-reload
+            sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+
+  Route53Record:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: Z0579086DAFNYUHYL0UP  # Replace with your Route 53 Hosted Zone ID
+      Name: akpros.solutions  # Replace with your domain
+      Type: A
+      TTL: 60
+      ResourceRecords:
+        - !GetAtt EC2Instance.PublicIp
+
+Outputs:
+  InstancePublicIP:
+    Description: Public IP of the EC2 instance
+    Value: !GetAtt EC2Instance.PublicIp
+
