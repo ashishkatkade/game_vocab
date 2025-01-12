@@ -37,13 +37,13 @@ jobs:
             --query "Stacks[0].Outputs[?OutputKey=='InstancePublicIP'].OutputValue" \
             --output text)
           
-          echo "EC2_PUBLIC_IP=${INSTANCE_PUBLIC_IP}" >> $GITHUB_ENV
+          echo "EC2_PUBLIC_IP1=${INSTANCE_PUBLIC_IP}" >> $GITHUB_ENV
 
       # Step 4: Copy files to the EC2 instance
       - name: Deploy files to EC2
         uses: appleboy/scp-action@v0.1.3
         with:
-          host: ${{ env.EC2_PUBLIC_IP }}
+          host: ${{ env.EC2_PUBLIC_IP1 }}
           username: ec2-user
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           source: "."
@@ -53,7 +53,7 @@ jobs:
       - name: Run Docker Compose on EC2
         uses: appleboy/ssh-action@v0.1.2
         with:
-          host: ${{ env.EC2_PUBLIC_IP }}
+          host: ${{ env.EC2_PUBLIC_IP1 }}
           username: ec2-user
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
