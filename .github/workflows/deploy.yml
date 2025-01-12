@@ -22,10 +22,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1  # Update to your desired AWS region
 
-      # Step 3: Debug: List files
-      - name: Debug: List files
-        run: ls -al
-
       # Step 3: Deploy CloudFormation stack
       - name: Deploy CloudFormation stack
         run: |
