@@ -64,7 +64,7 @@ jobs:
           target: "/home/ec2-user/flask-nginx"
 
       - name: Run Docker Compose on EC2
-        uses: appleboy/ssh-action@v0.1.2
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ env.EC2_PUBLIC_IP }}
           username: ec2-user
